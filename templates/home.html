@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html> 
+<!--Don't ask what this is... functions help with animation and the rest is just the webpage and stuff-->
+
+    <head>
+        <link rel="stylesheet" href="/static/style.css">
+    </head>
+    <script>
+
+        function change(){
+            var title = document.getElementById("hangman");
+            title.style.fontSize = "60px";
+        }
+        function returns(){
+            var title = document.getElementById("hangman");
+            title.style.fontSize = "25px";
+            setTimeout(function move() {
+                title.style.marginLeft = "-2200px"
+                var linehang = document.getElementById("linehang");
+                linehang.style.opacity = "1";
+            }, 1000)
+            setTimeout(function move2(){
+                var linehang = document.getElementById("linehang");
+                linehang.style.marginTop = "-25%";
+                linehang.style.width = "25%";
+                var key = document.getElementById("center");
+                key.style.display = "block";
+                var word = document.getElementById("word");
+                word.style.display = "block";
+                var lives = document.getElementById("lives")
+                lives.style.opacity = 1
+            }, 1000)
+
+
+        }
+        
+        window.addEventListener('keydown', function (e) {
+            var active = document.getElementById("center").style.display
+            if (active != "none"){
+                let regex = /^[a-zA-Z]+$/; 
+            if (regex.test(e.key)){
+                var ajax = new XMLHttpRequest();
+                ajax.onreadystatechange = function(){
+                    if (ajax.readyState == 4 && ajax.status == 200){
+                        if (ajax.responseText == "bad" || ajax.responseText == "meh"){
+                            if (ajax.responseText == "bad"){
+                                var object = document.getElementById(e.key)
+                                object.style.backgroundColor = "red"
+                            }
+
+                            const r = /\d+/;
+                            lives = document.getElementById("lives")
+                            number = lives.innerHTML
+                            lives.innerHTML = "Lives: " + (parseInt(number.match(r)) - 1)
+                            var hanger = document.getElementById("linehang")
+                            if ((parseInt(number.match(r)) - 1) == 3){
+                                hanger.src = "/static/hangman1.jpg"
+                            }
+                            else if ((parseInt(number.match(r)) - 1) == 2){
+                                hanger.src = "/static/hangman2.jpg"
+
+                            }
+                            else if ((parseInt(number.match(r)) - 1) == 1){
+                                hanger.src = "/static/hangman3.jpg"
+
+                            }
+                            else if ((parseInt(number.match(r)) - 1) == 0){
+                                hanger.src = "/static/hangman4.jpg"
+                                end("loss");
+                            }
+                            
+                        }
+                        
+                        else if(ajax.responseText == "good"){
+                            end("win")
+                        }
+                        else{
+
+                            var object = document.getElementById(e.key)
+                            object.style.backgroundColor = "green"
+                            const r = /\d+/g;
+                            const s = ajax.responseText;
+                            var m;
+                            while ((m = r.exec(s)) != null) {
+                                var letter = document.getElementById(m[0])
+                                letter.innerHTML = e.key
+                            }
+                            
+                        }
+                    }
+                }
+                ajax.open("POST", "/check_key", true);
+                ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                ajax.send("value=" + e.key);
+                }
+            }
+            
+        })
+    </script>
+
+    <body style="overflow-y: hidden;" id="body_body">
+        <div>
+            <h2 style="font-size: 35px; font-family: 'Times New Roman', Times, serif; text-align: center; margin-top: 20%; transition: font-size 1s linear, margin-left 1s linear;" id="hangman">The Hangman Games!</h2>
+            <img src="/static/hangman.jpg" style="opacity:0; position: relative;margin-top:-2%; margin-left: 40%; transition: opacity 2s linear, margin-top 1.5s linear, width 2s linear;" id="linehang">
+            <form action="/game_input" method="post">
+                
+                <input type="text" required name="topic" style="font-size: 20px; margin-left: 32%; border-radius: 25px;box-shadow: 5px 5px 5px black;" placeholder="ENTER TOPIC">
+                <button style="font-size: 20px; margin-left: 10%; border-radius: 25px;box-shadow: 5px 5px 5px black;" type="submit">LETS PLAY HANGMAN!</button>
+                
+
+            </form>
+            <p id="lives"  style="position:absolute; left:20%; top:25%; font-family: fantasy; opacity: 0; transition: opacity 1s linear; font-size: large; font-weight: 700;">Lives: 4</p>
+        </div>
+        <div id="word" style="display: none;">
+            <ul style="text-align: center; list-style-type: none;">
+                {% for x in range(lenght)%}
+                    {% if word[x] != " "%}
+                        <li style="margin-right: 1%; margin-left: 1%; background-color: none; width: 20px; height: 20px; font-size: 15px; border-radius: 2px;" id="{{x}}">_</li>
+                    {% else %}
+                        <li style="margin-right: 1%; margin-left: 1%; background-color: white; width: 20px; height: 20px; font-size: 15px; border-radius: 2px;"><wbr></li>
+                    {%endif%}
+                {% endfor %}
+            </ul>
+        </div>
+        <div style="display: none; margin-top:3%;" id="center">
+            <ul style="text-align: center; list-style-type: none;">
+                <li id="q">q</li>
+                <li id="w">w</li>
+                <li id="e">e</li>
+                <li id="r">r</li>
+                <li id="t">t</li>
+                <li id="y">y</li>
+                <li id="u">u</li>
+                <li id="i">i</li>
+                <li id="o">o</li>
+                <li id="p">p</li>
+            </ul>
+            <ul style="text-align: center; list-style-type: none;">
+                <li id="a">a</li>
+                <li id="s">s</li>
+                <li id="d">d</li>
+                <li id="f">f</li>
+                <li id="g">g</li>
+                <li id="h">h</li>
+                <li id="j">j</li>
+                <li id="k">k</li>
+                <li id="l">l</li>
+            </ul>
+            <ul style="text-align: center; list-style-type: none;">
+                <li id="z">z</li>
+                <li id="x">x</li>
+                <li id="c">c</li>
+                <li id="v">v</li>
+                <li id="b">b</li>
+                <li id="n">n</li>
+                <li id="m">m</li>
+            </ul>
+        </div>
+    </body>
+</html>
