@@ -24,7 +24,7 @@ def home():
     global correct_word
     if request.method == "GET":
         used.clear()
-        return render_template("home.html", lenght=len(correct_word), word=correct_word, lives=3)
+        return render_template("/static/home.html", lenght=len(correct_word), word=correct_word, lives=3)
 
 
 @app.route("/game_input", methods=["POST", "GET"])
@@ -32,7 +32,7 @@ def game_input():
     topic = request.form.get("topic")
     global correct_word
     correct_word = get_word(topic)
-    return render_template("home_reset.html", lenght=len(correct_word), word=correct_word)
+    return render_template("/static/home_reset.html", lenght=len(correct_word), word=correct_word)
 
 
 @app.route("/check_key", methods=["POST"])
