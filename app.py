@@ -13,6 +13,8 @@ from bardapi import Bard
 from dotenv import load_dotenv
 load_dotenv()
 
+app = 0
+
 def create_app():
     app = Flask(__name__)
 
