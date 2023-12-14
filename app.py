@@ -13,15 +13,12 @@ from bardapi import Bard
 from dotenv import load_dotenv
 load_dotenv()
 
-
+correct_word = "" 
+used = []
+_BARD_API_KEY="eAhplk9Fj5buEU5g79eMPXX7K9ZPlm3ZuJ72CqNa92nqk9ke2x-FBfh9QjhMP_pm9ox0sg."
 
 def create_app():
     app = Flask(__name__)
-
-    correct_word = "" 
-    used = []
-    _BARD_API_KEY="eAhplk9Fj5buEU5g79eMPXX7K9ZPlm3ZuJ72CqNa92nqk9ke2x-FBfh9QjhMP_pm9ox0sg."
-
     @app.route("/", methods=["POST", "GET"])
     def home():
         global correct_word
@@ -58,8 +55,11 @@ def create_app():
                     if x not in used:
                         return locations
             return "good"
-        
-    def get_word(input):
-    bard = Bard(token=_BARD_API_KEY)
-    answer = bard.get_answer(f"Tell me the name of a real thing that falls under this category, but just the name and nothing else: {input}. For example, if I were to say 'us states', I would like you to give me the name of a state. Do not include any characters that are not spaces or letters.")
-    return answer['content'].lower().strip()
+
+
+
+    
+def get_word(input):
+   bard = Bard(token=_BARD_API_KEY)
+   answer = bard.get_answer(f"Tell me the name of a real thing that falls under this category, but just the name and nothing else: {input}. For example, if I were to say 'us states', I would like you to give me the name of a state. Do not include any characters that are not spaces or letters.")
+   return answer['content'].lower().strip()
