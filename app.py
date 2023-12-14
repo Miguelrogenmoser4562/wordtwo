@@ -14,8 +14,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-
-app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
+    return app
 
 correct_word = "" 
 used = []
