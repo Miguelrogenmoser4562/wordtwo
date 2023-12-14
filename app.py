@@ -60,6 +60,3 @@ def get_word(input):
    bard = Bard(token=_BARD_API_KEY)
    answer = bard.get_answer(f"Tell me the name of a real thing that falls under this category, but just the name and nothing else: {input}. For example, if I were to say 'us states', I would like you to give me the name of a state. Do not include any characters that are not spaces or letters.")
    return answer['content'].lower().strip()
-
-if __name__=="__main__":
-    app.run(debug=False,host="0.0.0.0")
