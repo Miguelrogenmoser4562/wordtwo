@@ -13,51 +13,50 @@ from bardapi import Bard
 from dotenv import load_dotenv
 load_dotenv()
 
+
+
+app = Flask(__name__)
+
 correct_word = "" 
 used = []
 _BARD_API_KEY="eAhplk9Fj5buEU5g79eMPXX7K9ZPlm3ZuJ72CqNa92nqk9ke2x-FBfh9QjhMP_pm9ox0sg."
 
-def create_app():
-    app = Flask(__name__)
-    @app.route("/", methods=["POST", "GET"])
-    def home():
-        global correct_word
-        if request.method == "GET":
-            used.clear()
-            return render_template("home.html", lenght=len(correct_word), word=correct_word, lives=3)
+@app.route("/", methods=["POST", "GET"])
+def home():
+    global correct_word
+    if request.method == "GET":
+        used.clear()
+        return render_template("home.html", lenght=len(correct_word), word=correct_word, lives=3)
 
 
-    @app.route("/game_input", methods=["POST", "GET"])
-    def game_input():
-        topic = request.form.get("topic")
-        global correct_word
-        correct_word = get_word(topic)
-        return render_template("home_reset.html", lenght=len(correct_word), word=correct_word)
+@app.route("/game_input", methods=["POST", "GET"])
+def game_input():
+    topic = request.form.get("topic")
+    global correct_word
+    correct_word = get_word(topic)
+    return render_template("home_reset.html", lenght=len(correct_word), word=correct_word)
 
 
-    @app.route("/check_key", methods=["POST"])
-    def checking():
-        key = request.form['value']
-        if key not in correct_word:
-            return "bad"
+@app.route("/check_key", methods=["POST"])
+def checking():
+    key = request.form['value']
+    if key not in correct_word:
+        return "bad"
 
-        elif key in used:
-            return "meh"
+    elif key in used:
+        return "meh"
 
-        elif key in correct_word:
-            locations = []
-            for x in range(len(correct_word)):
-                if correct_word[x] == key:
-                    locations.append(x)
-            used.append(key)
-            for x in correct_word:
-                if x != " ":
-                    if x not in used:
-                        return locations
-            return "good"
-
-
-
+    elif key in correct_word:
+        locations = []
+        for x in range(len(correct_word)):
+            if correct_word[x] == key:
+                locations.append(x)
+        used.append(key)
+        for x in correct_word:
+            if x != " ":
+                if x not in used:
+                    return locations
+        return "good"
     
 def get_word(input):
    bard = Bard(token=_BARD_API_KEY)
