@@ -13,7 +13,8 @@ from bardapi import Bard
 from dotenv import load_dotenv
 load_dotenv()
 
-app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
 
 correct_word = "" 
 used = []
