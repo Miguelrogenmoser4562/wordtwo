@@ -8,15 +8,12 @@ the "used" list contains all of the words found in the word, or the website simp
 the lives becoming 0.
 
 """
-from flask import Flask, redirect, render_template, request, session
+from flask import render_template, request, Blueprint 
 from bardapi import Bard
 from dotenv import load_dotenv
 load_dotenv()
 
-
-def create_app():
-    app = Flask(__name__)
-    return app
+app = Blueprint('app', __name__)
 
 correct_word = "" 
 used = []
